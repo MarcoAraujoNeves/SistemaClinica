@@ -44,9 +44,11 @@
                 $consulta->setStatus($requestBody["status"]);
                 $consulta->setValidade($requestBody["validade"]);
 
+                $mysql_datetime = date('Y-m-d H:i:s', strtotime($requestBody["dataHora"]));
                 $mysql_datetime_inicio = date('Y-m-d H:i:s', strtotime($requestBody["inicio"]));
                 $mysql_datetime_termino = date('Y-m-d H:i:s', strtotime($requestBody["termino"]));
                 
+                $consulta->setDataHora($mysql_datetime);
                 $consulta->setInicio($mysql_datetime_inicio);
                 $consulta->setTermino($mysql_datetime_termino);
                 $consulta->update();

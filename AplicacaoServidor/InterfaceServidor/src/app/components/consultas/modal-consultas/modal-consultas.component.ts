@@ -77,6 +77,10 @@ export class ModalConsultasComponent implements OnInit {
                 termino: [{
                     value: this.consulta.termino?this.consulta.termino:null,
                     disabled: this.acaoModal == 'EDITAR' ? false : true,
+                }, Validators.required],
+                dataHora: [{
+                    value: this.consulta.termino?this.consulta.dataHora:null,
+                    disabled: this.acaoModal == 'EDITAR' ? false : true,
                 }, Validators.required]
             })
         })

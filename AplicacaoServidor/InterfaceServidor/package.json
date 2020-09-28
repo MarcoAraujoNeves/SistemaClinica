@@ -1,7 +1,7 @@
 {
   "name": "interface-servidor",
   "productName": "Aplicacao Servidor LabMed",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "main.js",
   "scripts": {
     "ng": "ng",

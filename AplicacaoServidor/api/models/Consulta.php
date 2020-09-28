@@ -205,7 +205,7 @@
                 $conexao = $db->conecta_mysql();
 
                 $sqlUpdate = "UPDATE consulta 
-                              SET codTipoConsulta = ?, status = ?, validade = ?, inicio = ?, termino = ?
+                              SET codTipoConsulta = ?, status = ?, validade = ?, inicio = ?, termino = ?, dataHora=?
                               WHERE codConsulta= ?";
                 $conexao->exec('SET NAMES utf8');
                 $stmtUpdate = $conexao->prepare($sqlUpdate);
@@ -214,7 +214,8 @@
                 $stmtUpdate->bindParam(3,$this->validade);
                 $stmtUpdate->bindParam(4,$this->inicio);
                 $stmtUpdate->bindParam(5,$this->termino);
-                $stmtUpdate->bindParam(6,$this->codConsulta);
+                $stmtUpdate->bindParam(6,$this->dataHora);
+                $stmtUpdate->bindParam(7,$this->codConsulta);
                 $result = $stmtUpdate->execute();
 
                 if($result) {

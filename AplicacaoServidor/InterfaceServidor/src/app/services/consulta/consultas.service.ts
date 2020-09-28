@@ -33,7 +33,8 @@ export class ConsultasService {
             'status': form.status,
             'validade': form.validade,
             'inicio': form.inicio,
-            'termino': form.termino
+            'termino': form.termino,
+            "dataHora":form.dataHora
         });
     }
     statusConsulta(dados): Observable<any> {
