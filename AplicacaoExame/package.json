@@ -13,7 +13,9 @@
     "electron": "electron . ",
     "electron-build": "ng build --prod && electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "dist-all-platforms":"electron-builder -mwl",
+    "dist-win":"electron-builder --win"
   },
   "private": true,
   "dependencies": {

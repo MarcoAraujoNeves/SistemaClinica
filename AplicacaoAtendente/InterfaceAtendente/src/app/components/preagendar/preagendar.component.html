@@ -49,13 +49,13 @@
                 </div>
             </div>
 
-            <mat-form-field class="inputForms" style="width: 80%;">
+            <mat-form-field class="inputForms" style="width: 100%;">
                 <input (click)="filtrarFuncao()" formControlName="funcao" type="text" placeholder="Insira o nome da função..."
                     (keydown)="carregarSubGrupos()" matInput [matAutocomplete]="auto3" ngModel required>
                 <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayAutocompleteFuncao">
                     <mat-option  (click)="carregarSubGrupos()"
                         *ngFor="let funcao of filteredFuncao | async" [value]="funcao">
-                        {{funcao.nome}}
+                        {{funcao.nome}} -  {{funcao.descricao}}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
