@@ -1,198 +1,134 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Servidor | LabMed</title>
-  <base href="./">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="assets/img/Logo.png">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" /> 
+<head>
+    <meta charset="utf-8">
+    <title>Servidor | LabMed</title>
+    <base href="./">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="assets/img/Logo.png">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
 <style>
-    p{ 
-        color:#003334;
-        font-weight: bold;
+    .box-info>div {
+        margin: 0.1rem 0rem;
     }
-    input{
-        background-color: transparent;
-        border:1px solid transparent;
+
+    .general-box {
+        border: 1px solid black;
+        padding: 0.1rem;
     }
-    .noCode{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-    .noCode>p{
-        margin-top:10rem;
-        font-weight:bold;
-        font-size:3rem;
-    }
-    #major-box{
-        width:900px;
-        margin:1rem auto;
-    }
-    .header{
+
+    .topo {
+        margin: 0.1rem 0rem;
         display: flex;
         justify-content: center;
+        text-align: center;
         align-items: center;
-        text-align: center;
     }
-    .logo{
-        width: 15rem ;
-        height: 15rem;
-        padding:1rem;
+
+    .topo>img {
+        width: 5rem;
+        height: 5rem;
     }
-    .logoASO{
-        width: 26rem ;
-        height: 10rem;
-        padding:2rem;
+
+    .topo>div {
+        margin: 0rem 2rem;
     }
-    .p-header{
-        padding:0%;
-        margin:0%;
-        color:#003334;
-        font-weight:bold;
-        font-size:1.1rem;
+
+    .topo>div>p {
+        font-size: 1.4em;
+        font-weight: bold;
+        color: rgb(12, 51, 53);
+        text-decoration: underline;
     }
-    /*------General styiling section------*/
-    .new-section{
-        text-align: center;
+
+    .section-content {
+        margin: 0.25rem 0rem;
     }
-    .new-section>p{
-        background-color:#003334;
-        color:white;
-        box-sizing: border-box;
-        width:100%;
-        height:auto;
-        padding:0%;
-        margin:0%;
-        border:1px solid #003334;
-    }
-    .new-data{
-        text-align: left;
-        justify-content: start;
+
+    .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         align-items: flex-start;
+        text-align: start;
+        margin: 0.1rem 0rem;
     }
-    .new-data>div{
-        padding:0.25rem;
-        border:1px solid #003334;
+
+    .row>div {
+        margin: 0.1rem 1rem;
     }
-    /*------------Empresa-----------------*/
-    .empresa-last-row{
-        display: flex;
-        justify-content: space-around;
+
+    .input {
+        border: 2px solid rgb(12, 51, 53);
+        width: 200px;
+        vertical-align: middle;
     }
-    /*-------Paciente---------*/
-    .paciente-row{
-        display: flex;
-    }
-    .paciente-row>div{
-        width:35%;
-    }
-    .paciente-row>form{
-        width:65%;
-    }
-    .form-paciente{
-        display: flex;
-        justify-content: space-between;
-    }
-    /*-------------Tipo consulta--------------*/
-    .new-data-tp{
-        display: flex;
-        justify-content: space-between;
-        border:1px solid #003334;
-    }
+
     /*------------------Riscos-----------------------*/
-    .new-data-ri{
-        border:1px solid #003334;
+    .new-data-ri {
+        text-align: center;
+        align-items: center;
     }
-    .box-risco{
+
+    .box-risco {
         display: flex;
-        width: auto;
+        text-align: center;
+        align-items: center;
     }
-    .new-data-ri>div{
-        border:1px solid #003334;
-    }
-    .new-data-ri>div>p{
-        color:#003334;
-    }
-    
-    .div-outros{
-        border:1px solid #003334;;
-    }
-    .div-outros>span{
-        color:  #003334;
-        font-weight: bold;
-        font-size: 1.1rem;
-    
-    }
-    .div-outros>input{
-        width:20rem;
-    }
-    .box-risco-content{
-        display:flex;
+
+    .box-risco-content {
+        display: flex;
         justify-content: center;
         text-align: center;
         align-items: center;
     }
-    .span-risco{
-        padding:0 0.1rem;
+
+    .box-risco-content>p {
+        padding: 0rem 0.1rem;
     }
-    /*-------------------Exame--------------------------*/
-    .new-data-ex{
+
+    /*------------------------Exames-------------------------*/
+    .box-exames {
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+
+    .new-data-ex {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /*---------------------Parecer----------------------*/
+    .box-parecer {
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+
+    .new-data-pa {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
     }
-    .new-data-ex>div{
-        border:1px solid #003334;
-    }
-    /*--------------------Parecer---------------------------*/
-    .new-data-pa{
-        border:1px solid #003334;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-    }
-    .new-data-pa>div{
-        border:1px solid #003334;
-    }
-    /*---------------------OBS------------------------------*/
-    .bottom-obs{
-        display: flex;
-        justify-content: flex-end;
-        border:1px solid #003334;
-        padding:0.5rem;
-    }
+
     /*--------------------Assinaturas------------------------*/
-    .assinaturas{
+    .assinaturas {
         display: flex;
         justify-content: space-around;
         align-items: center;
         text-align: center;
-        margin-top:1rem;
+        margin-top: 1rem;
     }
-    /*----------------------Actions----------------------------*/
-    .actions{
-        display: flex;
-        justify-content: center;
-        margin:3rem 0rem;
-    }
-    .actions>button{
-        background-color: #003334;
-        color:white;
-        width:8rem;
-        height: 3rem;
-        border:none;
-        border-radius: 10px;
-        outline:none;
-    }    
 </style>
+
 <body>
     <script type="module" src="./worker.js"></script>
-   <!---<script type="text/javascript">
+     
+    <!---<script type="text/javascript">
 
         let electron = require('electron');
         let ipcRenderer = require('electron').remote.ipcRenderer;
@@ -209,4 +145,5 @@
 
       </script>---->
 </body>
+
 </html>

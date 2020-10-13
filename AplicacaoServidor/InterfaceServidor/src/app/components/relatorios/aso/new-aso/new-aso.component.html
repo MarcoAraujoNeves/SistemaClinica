@@ -1,124 +1,221 @@
 <main>
 	<div *ngIf="executandoRequisicao">
-		<mat-progress-bar 
-		class="example-margin"
-		color="accent"
-		mode="query">
+		<mat-progress-bar class="example-margin" color="accent" mode="query">
 		</mat-progress-bar>
 	</div>
-	<div #content id="relatorio" *ngIf="!executandoRequisicao" >
-		<div id="major-box" >
-			<div id="header" class="header">
-				<img class="logo" src="assets/img/labmedlogo.jpg"/>
-				<div>
-				<div>
-					<p class="p-header">Labmed Nova Friburgo</p>
-					<p class="p-header">Clinica Médica do Trabalho</p>
-				</div>
-				<div style="margin-top:0.5rem">
-					<p class="p-header">CNPJ:31521.239/0001-30</p>
-					<p class="p-header">CNES:9720251</p>
-				</div>
+	<div>
+		<div class="general-box">
+			<div>
+				<strong>Dados do relatório</strong>
 			</div>
-			<img class="logoASO" src="assets/img/aso.png"/>
-			</div>
-			<div class="new-section">
-				<p>Dados da empresa:</p>
-				<div class="new-data">
-					<div>Razão Social: {{empresa.nome}}</div>
-					<div>CNPJ: {{empresa.cnpj}}</div>
-					<div>Endereço: {{empresa.rua}}, Bairo: {{empresa.bairro}}, Número: {{empresa.numero}}</div>
-					<div>Cidade/UF: {{empresa.cidade}}</div>
-					<div class="empresa-last-row">
-						<div >CEP: {{empresa.cep}}</div>
-						<div >Primeiro telefone: {{empresa.telefone1}}</div>
-						<div >Segundo telefone: {{empresa.telefone2?empresa.telefone2:"Não tem"}}</div>
-					</div>
+			<form [formGroup]="dados">
+				<div class="box-info general-box">
+					<div>Função: <input formControlName="funcao" /></div>
+					<div>Setor: <input formControlName="setor" /></div>
+					<div>Risco: <input formControlName="risco" /></div>
+					<div>Telefone: <input formControlName="telefone" /></div>
+					<div>Nome do médico: <input formControlName="nome" /></div>
+					<div>CRM: <input formControlName="crm" /></div>
 				</div>
-			</div>
-			<div class="new-section">
-				<p>Dados do paciente:</p>
-				<div class="new-data">
-					<div>Paciente: {{paciente.nome}}</div>
-					<div class="paciente-row">
-						<div>RG: {{paciente.rg}}</div>
-						<div>CPF: {{paciente.cpf}}</div>
-						<div>Nascimento: {{paciente.nascimento| date:'dd/MM/yyyy'}}</div>
-						<div>Sexo: {{paciente.sexo==="M"?"Masculino":"Feminino"}}</div>
-					</div>
-					<div class="paciente-row">
-						<div>Sexo: {{paciente.sexo==="M"?"Masculino":"Feminino"}}</div>
-						<form class="form-paciente" [formGroup]="dadosPaciente">
-							<div>Cargo: <input formControlName="cargo" /></div>
-							<div>Setor: <input formControlName="setor" /></div>
-						</form>
-					</div>
-				</div>
-			</div>
-			<div class="new-section">
-				<p>Riscos:</p>
 				<div class="new-data-ri">
 					<div class="box-risco" *ngFor="let ct of categoriaRisco">
-						<p>{{ct.nome}}: </p>
-						<div class="box-risco-content"  *ngFor="let ri of riscos">
-							<span class="span-risco" *ngIf="ct.codCategoriaRisco==ri.codCategoriaRisco">	
-								{{ri.selected?ri.risco+",":null}} 
-							</span>
+						<p style="font-weight: bolder;">{{ct.nome}}: </p>
+						<div class="box-risco-content" *ngFor="let ri of riscos">
+							<p (click)="deleteRisco(ri.codRisco)" class="p-risco-choose"
+								*ngIf="ct.codCategoriaRisco==ri.codCategoriaRisco">
+								{{ri.selected?ri.risco+",":null}}
+							</p>
+						</div>
+						<div style="display: flex;">
+							<input formControlName="inputRisco" class="input-riscos" />
+							<button class="insertRiscoButton" (click)="insertText(ct.codCategoriaRisco)">Inserir
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div #content>
+		<div class="general-box topo">
+			<img href="assets/img/Logo.png" />
+			<div>
+				<p>
+					ASO - Atestado De Saúde Ocupacional
+				</p>
+				<h6>
+					31.521.239/0001-30
+				</h6>
+			</div>
+			<img href="assets/img/Logo" />
+
+		</div>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>Prestador</strong>
+				</div>
+			</div>
+			<div class="general-box">
+				<div class="row">
+					<div>Clínica Prestador: <strong>Clínica Labmed Nova Friburgo</strong></div>
+					<span>Cidade: Nova Friburgo</span>
+				</div>
+				<div class="row">
+					<div>Endereço: Rua Coronel João Teixeira</div>
+					<div>Bairro: Conselheiro Paulino</div>
+					<div>Tel: (22) 2580-3618</div>
+				</div>
+			</div>
+
+		</section>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>Empresa</strong>
+				</div>
+			</div>
+			<div class="general-box">
+				<div class="row">
+					<div>Razão Social: <strong> {{empresa.nome}}</strong></div>
+				</div>
+				<div class="row">
+					<div>CNPJ: {{empresa.cnpj}}</div>
+					<div>Risco {{dados.value.risco}}</div>
+				</div>
+				<div class="row">
+					<div>Endereço: {{empresa.rua}}, N°: {{empresa.numero}}</div>
+					<div>Bairro: {{empresa.bairro}}</div>
+				</div>
+				<div class="row">
+					<div>Cidade: {{empresa.cidade}} / {{empresa.estado}}</div>
+					<div>CEP: {{empresa.cep}}</div>
+				</div>
+			</div>
+
+		</section>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>Funcionário</strong>
+				</div>
+			</div>
+			<div class="general-box">
+				<div class="row">
+					<div>Nome: <strong> {{paciente.nome}}</strong></div>
+				</div>
+				<div class="row">
+					<div>CPF: {{paciente.cpf}}</div>
+					<div>RG: {{paciente.rg}}</div>
+					<div>Nascimento / Idade: {{paciente.nascimento| date:'dd/MM/yyyy'}} - {{age}}</div>
+				</div>
+				<div class="row">
+					<div>Função: {{dados.value.funcao}}</div>
+					<div>Setor: {{dados.value.setor}}</div>
+				</div>
+				<div class="row">
+					<div>Telefone: {{dados.value.telefone}}</div>
+					<div>Sexo: {{paciente.sexo==="M"?"Masculino":"Feminino"}}</div>
+				</div>
+			</div>
+		</section>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>Médico Coordenador do PCMSO</strong>
+				</div>
+			</div>
+			<div class="general-box">
+				<div class="row">
+					<div>Nome: {{dados.value.nome}}</div>
+					<div>CRM: {{dados.value.crm}}</div>
+				</div>
+			</div>
+		</section>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>Riscos</strong>
+				</div>
+			</div>
+			<div class="general-box">
+				<div class="new-data-ri">
+					<div class="box-risco" *ngFor="let ct of categoriaRisco">
+						<p style="font-weight: bolder;">{{ct.nome}}: </p>
+						<div class="box-risco-content" *ngFor="let ri of riscos">
+							<p *ngIf="ct.codCategoriaRisco==ri.codCategoriaRisco">{{ri.selected?ri.risco+",":null}}</p>
 						</div>
 					</div>
 				</div>
 			</div>
-			<form [formGroup]="outros">
-					<div class="div-outros"><span>Outros:</span> <input formControlName="outros" /></div>
-			</form>
-			<div class="new-section">
-				<p>EM CUMPRIMENTO ÀS PORTARIAS N°S 3214/78, 3164/82, 12/83, 08/96 Nr 7 DO MINISTÉRIO DO TRABALHO E EMPREGO PARA FINS DE EXAME:</p>
-				<div class="new-data-tp">
-					<div *ngFor="let tp of tipoconsulta">{{tp.nome===consulta.tipo_consulta?"(x)":"(&ensp;)"}} {{tp.nome}} </div>
+		</section>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>EM CUMPRIMENTO ÀS PORTARIAS N° 3214/78,3164/82,12/83, 24/94 NR7 DO MINISTÉRIO DO TRABALHO E
+						EMPREGO PARA FINS DE EXAME:</strong>
 				</div>
 			</div>
-			<div class="new-section">
-				<p>AVALIAÇÃO CLÍNICA E EXAMES REALIZADOS / RESULTADOS EM PRONTUARIOS:</p>
-				<div class="new-data-ex">
-					<div style="display:flex;justify-content:center" *ngFor="let ex of exames"><div style="width:100%;height:100%">{{ex.codigo}} - {{ex.nome}}</div> {{ex.dataHora|date:"dd/MM/yyyy"}}</div>
+			<div class="general-box">
+				<div>
+					<div *ngFor="let tp of tipoconsulta">{{tp.nome===consulta.tipo_consulta?tp.nome:null}}</div>
 				</div>
 			</div>
-			<div class="new-section">
-				<p>Parecer médico:</p>
-				<div class="new-data-pa">
-					<div *ngFor="let pa of pareceres">{{pa.selected?"(x)":"(&ensp;)"}} {{pa.nome}}</div>
+		</section>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>Avaliação clínica e exames realizados:</strong>
 				</div>
 			</div>
-			<div class="new-section">
-				<p>Observação:</p>
-				<div class="bottom-obs">
-				Válido por  {{consulta.validade}} meses
+			<div class="general-box">
+				<div class="box-exames">
+					<div class="new-data-ex">
+						<div style="display:flex;justify-content:center" *ngFor="let ex of examesConsulta">
+							<div style="width:100%;height:100%">__/__/__ {{ex.codigo}} {{ex.nome}}</div>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="assinaturas">
-				<div >
-					<p>___/____/___<p>
-					<p>
-						_______________________________________________
-					</p>
-					<p>Médico coordenador/Examinador</p>
-					<p>Assinatura e carimbo</p>
+
+		</section>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>Parecer:</strong>
 				</div>
-				<div >
-					<p>___/____/___<p>
-					<p>Eu, abaixo assinado, declaro que fui submetido
+			</div>
+			<div class="general-box">
+				<div class="box-parecer">
+					<div class="new-data-pa">
+						<div *ngFor="let pa of pareceres">___ {{pa.nome}}</div>
+					</div>
+				</div>
+			</div>
+
+		</section>
+		<div class="assinaturas">
+			<div>
+				<p>___/____/___
+				<p>
+				<p>
+					_______________________________________________
+				</p>
+				<p>Médico coordenador/Examinador</p>
+				<p>Assinatura e carimbo</p>
+			</div>
+			<div>
+				<p>___/____/___
+				<p>
+				<p>Eu, abaixo assinado, declaro que fui submetido
 					ao exame médico acima especificado nesta data.(Portaria 3214 NR-7 item 7.4.4)
-					</p>
-					<p>_______________________________________________</p>
-					<p>Assinatura do colaborador</p>	
-				</div>
+				</p>
+				<p>_______________________________________________</p>
+				<p>{{paciente.nome}}</p>
 			</div>
 		</div>
 	</div>
 	<div class="actions">
-		<button (click)="gerarPdf()" >Gerar pdf</button>
+		<button (click)="gerarPdf()">Gerar pdf</button>
 	</div>
 </main>
-<script>
-
-</script>

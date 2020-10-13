@@ -6,62 +6,6 @@ const fs = require('fs');
 let win;
 let splash;
 
-function createSplashScreen() {
-    splash = new BrowserWindow({
-        width: 400,
-        height: 475,
-        frame: false,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-
-    splash.loadURL(`file://${__dirname}/dist/InterfaceServidor/assets/splash-screen/index.html`);
-
-    splash.show();
-
-    splash.on("close", createMainWindow);
-    splash.on("closed", function () {
-        splash = null;
-    });
-}
-
-function createMainWindow() {
-    win = new BrowserWindow({
-        //width: 900,
-        //height: 600,
-        backgroundColor: "#ffffff",
-        show: false,
-        webPreferences: {
-            nodeIntegration: true,
-            webSecurity: false,
-        }
-        //icon: `file://${__dirname}/dist/InterfaceServidor/assets/img/logo.png`
-    });
-    //win.webContents.openDevTools();
-    win.loadURL(`file://${__dirname}/dist/InterfaceServidor/index.html`);
-    
-    workerWindow = new BrowserWindow({
-        show: false,
-        webPreferences: {
-            webSecurity: false,
-            nodeIntegration: true
-        }
-    });
-    workerWindow.loadURL("file://" + __dirname + "/dist/InterfaceServidor/assets/pdf/worker.html");
-    //workerWindow.webContents.openDevTools();
-    workerWindow.hide();
- 
-    win.maximize();
-    win.show();
-
-     workerWindow.on("closed", () => {
-        workerWindow = undefined;
-    });
-    win.on("closed", function () {
-        win = null;
-    });
-}
 
 ipcMain.on('printPDF', (event, content) => {
     //console.log(content);
@@ -104,6 +48,70 @@ ipcMain.on("readyToPrintPDF",async(event) => {
         throw error;
     })
 });
+
+function createMainWindow() {
+    win = new BrowserWindow({
+        width: 900,
+        height: 600,
+        backgroundColor: "#ffffff",
+        show: false,
+        webPreferences: {
+            nodeIntegration: true,
+            webSecurity: false,
+            enableRemoteModule: true
+        }
+        //icon: `file://${__dirname}/dist/InterfaceServidor/assets/img/logo.png`
+    });
+    //win.webContents.openDevTools();
+    win.loadURL(`file://${__dirname}/dist/InterfaceServidor/index.html`);
+ 
+    win.maximize();
+    win.show();
+
+    win.on("closed", function () {
+        win = null;
+    });
+}
+
+function createSplashScreen() {
+    workerWindow = new BrowserWindow({
+        show: false,
+        webPreferences: {
+            webSecurity: false,
+            nodeIntegration: true
+        }
+    });
+    workerWindow.loadURL("file://" + __dirname + "/dist/InterfaceServidor/assets/pdf/worker.html");
+    //workerWindow.webContents.openDevTools();
+    workerWindow.hide();
+  
+    splash = new BrowserWindow({
+        width: 400,
+        height: 475,
+        frame: false,
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true
+
+        }
+    });
+
+    splash.loadURL(`file://${__dirname}/dist/InterfaceServidor/assets/splash-screen/index.html`);
+    //splash.webContents.openDevTools();
+    splash.show();
+
+    splash.on("close", createMainWindow);
+    splash.on("closed", function () {
+        splash = null;
+    });
+
+
+    workerWindow.on("closed", () => {
+        workerWindow = undefined;
+    });
+}
+
+
 // app.on("ready", createMainWindow);
 app.on("ready", createSplashScreen);
 

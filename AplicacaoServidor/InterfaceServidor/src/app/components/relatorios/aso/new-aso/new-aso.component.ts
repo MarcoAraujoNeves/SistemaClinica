@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject,NgZone,ViewChild ,ElementRef} from '@angular/core';
+import { Component, OnInit, Input, Inject, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { ConsultasService } from '../../../../services/consulta/consultas.service'
 import { EmpresasService } from '../../../../services/empresas/empresas.service'
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
@@ -13,9 +13,11 @@ import { RiscoExameService } from 'src/app/services/exame_risco/exame-risco.serv
 import { CategoriaRiscoService } from 'src/app/services/categoria-risco/categoria-risco.service';
 //import * as jsPDF from 'jspdf'
 //import html2canvas from 'html2canvas';
+import * as uuid from 'uuid';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ConsultaParecerService } from '../../../../services/consulta_parecer/consulta-parecer.service';
 import { ElectronService } from 'ngx-electron';
+
 @Component({
   selector: 'app-new-aso',
   templateUrl: './new-aso.component.html',
@@ -25,7 +27,7 @@ export class NewAsoComponent implements OnInit {
 
   executandoRequisicao = false;
   message: string;
-  @ViewChild('content',{static:false}) content:ElementRef;
+  @ViewChild('content', { static: false }) content: ElementRef;
 
   constructor(
     public dialogRef: MatDialogRef<NewAsoComponent>,
@@ -41,26 +43,27 @@ export class NewAsoComponent implements OnInit {
     private parecerService: ParecerService,
     private categoriaRiscoService: CategoriaRiscoService,
     private consultaParecerService: ConsultaParecerService,
-    private _electronService: ElectronService, 
+    private _electronService: ElectronService,
     private _ngZone: NgZone,
     @Inject(MAT_DIALOG_DATA) public data,
-  ) { 
+  ) {
     this._electronService.ipcRenderer.on('asynchronous-reply', (event, arg) => {
       this._ngZone.run(() => {
-          let reply = `Asynchronous message reply: ${arg}`;
-          this.message = reply;
+        let reply = `Asynchronous message reply: ${arg}`;
+        this.message = reply;
       });
-  })}
+    })
+  }
 
   ngOnInit() {
-    this.visualizar(this.codConsulta);    
+    this.visualizar(this.codConsulta);
   }
 
   empresa;
   paciente;
   Funcao;
   consulta;
-  dadosPaciente: FormGroup;
+  dados: FormGroup;
   outros: FormGroup;
   tipoconsulta = []
   codConsulta = this.data.codConsulta;
@@ -69,19 +72,35 @@ export class NewAsoComponent implements OnInit {
   examesConsulta = []
   pareceres = []
   categoriaRisco = []
+  age: number;
 
   iniciaDados() {
-    this.dadosPaciente = this.formBuilder.group({
-      cargo: [null],
-      setor: [null]
-    })
-    this.outros = this.formBuilder.group({
-      outros: [null]
+    this.dados = this.formBuilder.group({
+      risco: [null],
+      setor: [null],
+      funcao: [null],
+      nome: [null],
+      crm: [null],
+      inputRisco: [null],
+      telefone: [null]
     })
   }
+
+  insertText(codCategoriaRisco) {
+    const myId = uuid.v4();
+    if (this.dados.value.inputRisco) {
+      this.riscos.push({ codRisco: myId, codCategoriaRisco: codCategoriaRisco, selected: true, risco: this.dados.value.inputRisco });
+      this.dados.setValue({
+        ...this.dados.value,
+        inputRisco: null
+      });
+    }
+  }
+
   onNoClick() {
     this.dialogRef.close();
   }
+
   visualizar(codConsulta) {
     this.iniciaDados();
     this.listTipoConsulta();
@@ -99,6 +118,17 @@ export class NewAsoComponent implements OnInit {
       }
     })
   }
+
+  calculateAge() {
+    const ageDifMs = Date.now() - new Date(this.paciente.nascimento).getTime();
+    const ageDate = new Date(ageDifMs); // miliseconds from epoch
+    this.age = Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+
+  deleteRisco(codRisco) {
+    this.riscos = this.riscos.filter(item => item.codRisco !== codRisco);
+  }
+
   async readEmpresa(codEmpresa) {
     await this.empresaService.lerEmpresa(codEmpresa).subscribe(empresa => {
       this.empresa = empresa;
@@ -107,6 +137,7 @@ export class NewAsoComponent implements OnInit {
   async readPaciente(codPaciente) {
     await this.pacienteService.lerPaciente(codPaciente).subscribe(paciente => {
       this.paciente = paciente;
+      this.calculateAge();
     })
   }
   async readExameConsulta(codConsulta) {
@@ -114,6 +145,7 @@ export class NewAsoComponent implements OnInit {
     await this.exameConsultaProfissionalService.lerConsultas(codConsulta).subscribe(exames => {
       let consultaObj = exames[codConsulta].cep;
       for (let i = 0; i < Object.keys(consultaObj).length; i++) {
+
         this.refatorateConsultaExames(consultaObj[i].codExame);
         this.refatorateRiscos(consultaObj[i].codExame);
       }
@@ -137,6 +169,7 @@ export class NewAsoComponent implements OnInit {
     this.exames.forEach(data => {
       if (codExame == data.codExame) {
         data['dataHora'] = this.consulta.dataHora
+        this.examesConsulta.push(data);
       }
     })
   }
@@ -190,8 +223,8 @@ export class NewAsoComponent implements OnInit {
       })
     })
   }
-  
-  gerarPdf(){
-    this._electronService.ipcRenderer.send("printPDF",this.content.nativeElement.innerHTML);
+
+  gerarPdf() {
+    this._electronService.ipcRenderer.send("printPDF", this.content.nativeElement.innerHTML);
   }
 }
