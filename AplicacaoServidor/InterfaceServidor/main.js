@@ -6,50 +6,20 @@ const fs = require('fs');
 let win;
 let splash;
 
-
-ipcMain.on('printPDF', (event, content) => {
-    //console.log(content);
-    workerWindow.webContents.send('printPDF', content);
-});
-// when worker window is ready
-ipcMain.on("readyToPrintPDF",async(event) => {
-    
-    const date = new Date();
-    const fileName = date.getDate()+"dia "+date.getMonth()+"mes "+date.getFullYear()+"ano "+date.getHours()+"h-"+date.getMinutes()+"m-"+date.getSeconds()+'s';
-    
-    const folderPath = path.join(os.homedir(),'Desktop','relatoriosAso');
- 
-     try {
-      if (!fs.existsSync(folderPath)) {
-        fs.mkdir(folderPath, { recursive: true }, function(err) {
-          if (err) {
-            console.log(err)
-          } else {
-            console.log("New directory successfully created.")
-          }
-        })
-      } 
-    } catch(e) {
-      console.log("An error occurred.")
-    }
-    
-	await workerWindow.webContents.printToPDF({  printSelectionOnly: false,printBackground: true, silent: false,  landscape: false, pageSize: "A4" }).then((data) => {
-       
-        const pdfPath = process.platform !== "win32"?path.join(os.homedir(),`relatorio Aso ${fileName}.pdf`) :path.join(folderPath,`relatorio Aso ${fileName}.pdf`);
-        
-            fs.writeFile(pdfPath, data,function (error) {
-            if (error) {
-                throw error
-            }
-            event.sender.send('wrote-pdf', pdfPath)
-            shell.openExternal(pdfPath);
-        })
-    }).catch((error) => {
-        throw error;
-    })
-});
-
 function createMainWindow() {
+
+    workerWindow = new BrowserWindow({
+        show: false,
+        webPreferences: {
+            webSecurity: false,
+            nodeIntegration: true,
+            plugins: true
+        }
+    });
+    workerWindow.loadURL("file://" + __dirname + "/dist/InterfaceServidor/assets/pdf/worker.html");
+    //workerWindow.webContents.openDevTools();
+    workerWindow.hide();
+
     win = new BrowserWindow({
         width: 900,
         height: 600,
@@ -71,19 +41,14 @@ function createMainWindow() {
     win.on("closed", function () {
         win = null;
     });
+
+
+    workerWindow.on("closed", () => {
+        workerWindow = undefined;
+    });
 }
 
 function createSplashScreen() {
-    workerWindow = new BrowserWindow({
-        show: false,
-        webPreferences: {
-            webSecurity: false,
-            nodeIntegration: true
-        }
-    });
-    workerWindow.loadURL("file://" + __dirname + "/dist/InterfaceServidor/assets/pdf/worker.html");
-    //workerWindow.webContents.openDevTools();
-    workerWindow.hide();
   
     splash = new BrowserWindow({
         width: 400,
@@ -104,13 +69,49 @@ function createSplashScreen() {
     splash.on("closed", function () {
         splash = null;
     });
-
-
-    workerWindow.on("closed", () => {
-        workerWindow = undefined;
-    });
 }
 
+ipcMain.on('printPDF', (event, content) => {
+    //console.log(content);
+    workerWindow.webContents.send('printPDF', content);
+});
+// when worker window is ready
+ipcMain.on("readyToPrintPDF",async (event) => {
+    
+    const date = new Date();
+    const fileName = date.getDate()+"dia "+date.getMonth()+"mes "+date.getFullYear()+"ano "+date.getHours()+"h-"+date.getMinutes()+"m-"+date.getSeconds()+'s';
+    
+    const folderPath = path.join(os.homedir(),'Desktop','relatoriosAso');
+ 
+     try {
+      if (!fs.existsSync(folderPath)) {
+        await fs.mkdir(folderPath, { recursive: true }, function(err) {
+          if (err) {
+            console.log(err)
+          } else {
+            console.log("New directory successfully created.")
+          }
+        })
+      } 
+    } catch(e) {
+      console.log("An error occurred.")
+    }
+    
+	await workerWindow.webContents.printToPDF({ silent:true, printSelectionOnly: false,printBackground: true,  landscape: false, pageSize: "A4" }).then((data) => {
+       
+        const pdfPath = process.platform !== "win32"?path.join(os.homedir(),`relatorio Aso ${fileName}.pdf`) :path.join(folderPath,`relatorio Aso ${fileName}.pdf`);
+        
+            fs.writeFile(pdfPath, data,function (error) {
+            if (error) {
+                throw error
+            }
+            event.sender.send('wrote-pdf', pdfPath)
+            shell.openExternal(pdfPath);
+        })
+    }).catch((error) => {
+        throw error;
+    })
+});
 
 // app.on("ready", createMainWindow);
 app.on("ready", createSplashScreen);

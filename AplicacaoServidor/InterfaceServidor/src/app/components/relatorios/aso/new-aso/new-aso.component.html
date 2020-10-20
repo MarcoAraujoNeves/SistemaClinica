@@ -3,42 +3,86 @@
 		<mat-progress-bar class="example-margin" color="accent" mode="query">
 		</mat-progress-bar>
 	</div>
-	<div>
+	<div *ngIf="!executandoRequisicao">
 		<div class="general-box">
-			<div>
-				<strong>Dados do relatório</strong>
-			</div>
-			<form [formGroup]="dados">
-				<div class="box-info general-box">
-					<div>Função: <input formControlName="funcao" /></div>
-					<div>Setor: <input formControlName="setor" /></div>
-					<div>Risco: <input formControlName="risco" /></div>
-					<div>Telefone: <input formControlName="telefone" /></div>
-					<div>Nome do médico: <input formControlName="nome" /></div>
-					<div>CRM: <input formControlName="crm" /></div>
-				</div>
-				<div class="new-data-ri">
-					<div class="box-risco" *ngFor="let ct of categoriaRisco">
-						<p style="font-weight: bolder;">{{ct.nome}}: </p>
-						<div class="box-risco-content" *ngFor="let ri of riscos">
-							<p (click)="deleteRisco(ri.codRisco)" class="p-risco-choose"
-								*ngIf="ct.codCategoriaRisco==ri.codCategoriaRisco">
-								{{ri.selected?ri.risco+",":null}}
-							</p>
-						</div>
-						<div style="display: flex;">
-							<input formControlName="inputRisco" class="input-riscos" />
-							<button class="insertRiscoButton" (click)="insertText(ct.codCategoriaRisco)">Inserir
-							</button>
-						</div>
+			<mat-accordion>
+				<mat-expansion-panel>
+					<mat-expansion-panel-header>
+						<strong>Dados do relatório:</strong>
+					</mat-expansion-panel-header>
+					<div class="col-auto my-3"
+						style="border-radius: 5px; padding: 5px ; background-color: rgba(24, 134, 99, 0.288)">
+						<form [formGroup]="dados">
+							<div class="box-info general-box">
+
+								<mat-form-field class="inputForms" style="width: 100%;">
+									<input (click)="filtrarFuncao()" formControlName="funcao" type="text"
+										placeholder="Insira o nome da função..." matInput [matAutocomplete]="auto3"
+										ngModel required />
+									<mat-autocomplete #auto3="matAutocomplete"
+										[displayWith]="displayAutocompleteFuncao">
+										<mat-option *ngFor="let funcao of filteredFuncao | async" [value]="funcao">
+											{{funcao.nome}} - {{funcao.descricao}}
+										</mat-option>
+									</mat-autocomplete>
+								</mat-form-field>
+
+								<mat-form-field class="example-full-width">
+									<mat-label>Setor</mat-label>
+									<input formControlName="setor" matInput />
+								</mat-form-field>
+
+								<mat-form-field class="example-full-width">
+									<mat-label>Risco</mat-label>
+									<input formControlName="risco" matInput />
+								</mat-form-field>
+
+								<mat-form-field class="example-full-width">
+									<mat-label>Telefone</mat-label>
+									<input formControlName="telefone" matInput />
+								</mat-form-field>
+
+								<mat-form-field class="example-full-width">
+									<mat-label>Nome do médico</mat-label>
+									<input formControlName="nome" matInput />
+								</mat-form-field>
+
+								<mat-form-field class="example-full-width">
+									<mat-label>CRM</mat-label>
+									<input formControlName="crm" matInput />
+								</mat-form-field>
+
+								<div>Imagem: <input [formControl]="dados.value.image"
+										style="background-color: transparent;" (change)="onAdd($event)" type="file" />
+								</div>
+
+							</div>
+							<div class="new-data-ri">
+								<div class="box-risco" *ngFor="let ct of categoriaRisco">
+									<p style="font-weight: bolder;">{{ct.nome}}: </p>
+									<div class="box-risco-content" *ngFor="let ri of riscos">
+										<p (click)="deleteRisco(ri.codRisco)" class="p-risco-choose"
+											*ngIf="ct.codCategoriaRisco==ri.codCategoriaRisco">
+											{{ri.selected?ri.risco+",":null}}
+										</p>
+									</div>
+									<div style="display: flex;">
+										<input formControlName="inputRisco" class="input-riscos" />
+										<button class="insertRiscoButton"
+											(click)="insertText(ct.codCategoriaRisco)">Inserir
+										</button>
+									</div>
+								</div>
+							</div>
+						</form>
 					</div>
-				</div>
-			</form>
+				</mat-expansion-panel>
+			</mat-accordion>
 		</div>
 	</div>
 	<div #content>
 		<div class="general-box topo">
-			<img href="assets/img/Logo.png" />
+			<img src="assets/img/labmedlogo.jpg">
 			<div>
 				<p>
 					ASO - Atestado De Saúde Ocupacional
@@ -47,8 +91,7 @@
 					31.521.239/0001-30
 				</h6>
 			</div>
-			<img href="assets/img/Logo" />
-
+			<img *ngIf="dados.value.image" src="{{dados.value.image}}">
 		</div>
 		<section class="section-content">
 			<div class="general-box">
@@ -110,7 +153,7 @@
 					<div>Nascimento / Idade: {{paciente.nascimento| date:'dd/MM/yyyy'}} - {{age}}</div>
 				</div>
 				<div class="row">
-					<div>Função: {{dados.value.funcao}}</div>
+					<div>Função: {{dados.value.funcao.nome}}</div>
 					<div>Setor: {{dados.value.setor}}</div>
 				</div>
 				<div class="row">
@@ -188,11 +231,22 @@
 			<div class="general-box">
 				<div class="box-parecer">
 					<div class="new-data-pa">
-						<div *ngFor="let pa of pareceres">___ {{pa.nome}}</div>
+						<div *ngFor="let pa of pareceres"><span style="margin-right: 0.5rem;">[</span><span>]</span>
+							{{pa.nome}}</div>
 					</div>
 				</div>
 			</div>
 
+		</section>
+		<section class="section-content">
+			<div class="general-box">
+				<div>
+					<strong>Validade:</strong>
+				</div>
+			</div>
+			<div class="general-box">
+				Válido por __ meses
+			</div>
 		</section>
 		<div class="assinaturas">
 			<div>

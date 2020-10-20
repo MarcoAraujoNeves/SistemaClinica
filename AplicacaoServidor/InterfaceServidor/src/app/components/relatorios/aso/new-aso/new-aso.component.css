@@ -22,7 +22,7 @@
 
 .general-box {
     border: 1px solid black;
-    padding: 0.25rem;
+    padding: 0.125rem;
 }
 
 .trash{
@@ -39,23 +39,23 @@
 }
 
 .topo>img {
-    width: 5rem;
-    height: 5rem;
+    width: 8rem;
+    height: 8rem;
 }
 
 .topo>div {
-    margin: 0rem 2rem;
+    margin: 0rem 6rem;
 }
 
 .topo>div>p {
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: bold;
     color: rgb(12, 51, 53);
     text-decoration: underline;
 }
 
 .section-content {
-    margin: 0.5rem 0rem;
+    margin: 0.25rem 0rem;
 }
 
 .row {
@@ -63,11 +63,11 @@
     grid-template-columns: repeat(3, 1fr);
     align-items: flex-start;
     text-align: start;
-    margin: 0.5rem 0rem;
+    margin: 0.25rem 0rem;
 }
 
 .row>div {
-    margin: 0.5rem 1rem;
+    margin: 0.25rem 1rem;
 }
 
 .input {
@@ -80,14 +80,18 @@
 .new-data-ri{
     text-align: center;
     align-items: center;
+    margin:0rem;
+    padding:0rem;
 }
 .box-risco{
     display: flex;
     text-align: center;
     align-items: center;
+    margin:0rem;
+    padding:0rem;
 }
 .box-risco-content{
-    margin:0.25rem 0rem;
+    margin:0rem;
     display:flex;
     justify-content: center;
     text-align: center;
@@ -125,7 +129,7 @@
     justify-content: space-around;
     align-items: center;
     text-align: center;
-    margin-top:1rem;
+    margin-top:0.5rem;
 }
 /*----------------------Actions----------------------------*/
 .actions{

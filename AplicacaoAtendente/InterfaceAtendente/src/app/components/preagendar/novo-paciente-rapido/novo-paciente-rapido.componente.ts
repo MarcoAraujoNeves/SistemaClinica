@@ -37,7 +37,7 @@ export class NovoPacienteRapidoComponent implements OnInit {
 
     configurarFormulario() {
         this.formularioNovoPaciente = this.formBuilder.group({
-            nome: [null, [Validators.required,Validators.pattern(this.SoLetras_Validator)]],
+            nome: [null, Validators.required],
             cpf: [null],
             rg: [null],
             sexo: [null],

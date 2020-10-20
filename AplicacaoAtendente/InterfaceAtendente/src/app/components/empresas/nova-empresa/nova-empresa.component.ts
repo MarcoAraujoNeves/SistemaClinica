@@ -61,16 +61,6 @@ export class NovaEmpresaComponent implements OnInit {
 
         let form = this.formularioNovaEmpresa.value;
 
-        //Testa se algum campo está vazio
-        for (let campo in form) {
-            if (form[campo]==null){
-            this._snackBar.open("Dados em vermelho incorretos ou em branco, não foi possivel cadastrar !!!", null, {
-                duration: 6000,
-            });
-            return;
-            }
-        }
-
         //Testa se algum campo não esta esta seguindo o padrão de validação
         if (this.formularioNovaEmpresa.invalid) {
             this.executandoRequisicao = false;

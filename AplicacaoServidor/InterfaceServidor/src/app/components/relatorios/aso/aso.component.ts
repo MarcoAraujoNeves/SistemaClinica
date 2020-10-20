@@ -30,7 +30,7 @@ export class ASOComponent implements OnInit {
     let dialog = this.dialog.open(NewAsoComponent, {
         width: '950px',
         autoFocus: false,
-        maxHeight: '90vh',
+        maxHeight: '95vh',
         data: { codConsulta:codConsulta },
     })}
     carregarDadosTabela() {

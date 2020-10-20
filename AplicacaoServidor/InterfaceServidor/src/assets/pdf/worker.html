@@ -13,17 +13,28 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
 <style>
+    * {
+        font-size: 0.825rem;
+        padding: 0rem;
+        margin:0rem;
+    }
+
     .box-info>div {
-        margin: 0.1rem 0rem;
+        margin: 1rem 0rem;
     }
 
     .general-box {
         border: 1px solid black;
-        padding: 0.1rem;
+        padding: 0.125rem;
+    }
+
+    .trash {
+        width: 1rem;
+        height: 1rem;
     }
 
     .topo {
-        margin: 0.1rem 0rem;
+        margin: 0.25rem 0rem;
         display: flex;
         justify-content: center;
         text-align: center;
@@ -31,16 +42,16 @@
     }
 
     .topo>img {
-        width: 5rem;
-        height: 5rem;
+        width: 8rem;
+        height: 8rem;
     }
 
     .topo>div {
-        margin: 0rem 2rem;
+        margin: 0rem 6rem;
     }
 
     .topo>div>p {
-        font-size: 1.4em;
+        font-size: 1.3em;
         font-weight: bold;
         color: rgb(12, 51, 53);
         text-decoration: underline;
@@ -55,11 +66,11 @@
         grid-template-columns: repeat(3, 1fr);
         align-items: flex-start;
         text-align: start;
-        margin: 0.1rem 0rem;
+        margin: 0.25rem 0rem;
     }
 
     .row>div {
-        margin: 0.1rem 1rem;
+        margin: 0.25rem 1rem;
     }
 
     .input {
@@ -72,19 +83,27 @@
     .new-data-ri {
         text-align: center;
         align-items: center;
+        margin:0rem;
+        padding:0rem;
     }
 
     .box-risco {
+        margin:0rem;
+        padding:0rem;
         display: flex;
         text-align: center;
         align-items: center;
     }
 
     .box-risco-content {
+        margin: 0rem;
         display: flex;
         justify-content: center;
         text-align: center;
         align-items: center;
+        vertical-align: middle;
+        padding: 0rem;
+        float: left;
     }
 
     .box-risco-content>p {
@@ -121,7 +140,7 @@
         justify-content: space-around;
         align-items: center;
         text-align: center;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
     }
 </style>
 

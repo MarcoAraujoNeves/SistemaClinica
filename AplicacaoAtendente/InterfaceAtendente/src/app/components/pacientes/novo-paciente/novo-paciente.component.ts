@@ -41,7 +41,7 @@ export class NovoPacienteComponent implements OnInit {
 
     configurarFormulario() {
         this.formularioNovoPaciente = this.formBuilder.group({
-            nome: [null, [Validators.required,Validators.pattern(this.SoLetras_Validator)]],
+            nome: [null, Validators.required],
             cpf: [null],
             rg: [null],
             sexo: [null],
@@ -53,15 +53,6 @@ export class NovoPacienteComponent implements OnInit {
 
         let form = this.formularioNovoPaciente.value;
 
-        //Testar se algum campo está vazio
-        for (let campo in form) {
-            if (form[campo]==null){
-            this._snackBar.open("Dados em vermelho incorretos ou em branco, não foi possivel cadastrar !!!", null, {
-                duration: 6000,
-            });
-            return;
-            }
-        }
 
          //Testa se algum campo não esta esta seguindo o padrão de validação
         if (this.formularioNovoPaciente.invalid) {

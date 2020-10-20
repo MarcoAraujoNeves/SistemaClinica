@@ -11,9 +11,13 @@ import { ConsultaExameProfissionalService } from 'src/app/services/consulta-exam
 import { ParecerService } from 'src/app/services/parecer/parecer.service';
 import { RiscoExameService } from 'src/app/services/exame_risco/exame-risco.service';
 import { CategoriaRiscoService } from 'src/app/services/categoria-risco/categoria-risco.service';
+import { funcao } from "src/app/services/funcao/funcao";
+import { FuncaoService } from "src/app/services/funcao/funcao.service";
 //import * as jsPDF from 'jspdf'
 //import html2canvas from 'html2canvas';
 import * as uuid from 'uuid';
+import { map, startWith } from "rxjs/operators";
+import { Observable } from "rxjs";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ConsultaParecerService } from '../../../../services/consulta_parecer/consulta-parecer.service';
 import { ElectronService } from 'ngx-electron';
@@ -25,7 +29,6 @@ import { ElectronService } from 'ngx-electron';
 })
 export class NewAsoComponent implements OnInit {
 
-  executandoRequisicao = false;
   message: string;
   @ViewChild('content', { static: false }) content: ElementRef;
 
@@ -41,6 +44,7 @@ export class NewAsoComponent implements OnInit {
     private exameService: ExameService,
     private exameConsultaProfissionalService: ConsultaExameProfissionalService,
     private parecerService: ParecerService,
+    private funcaoService: FuncaoService,
     private categoriaRiscoService: CategoriaRiscoService,
     private consultaParecerService: ConsultaParecerService,
     private _electronService: ElectronService,
@@ -72,7 +76,11 @@ export class NewAsoComponent implements OnInit {
   examesConsulta = []
   pareceres = []
   categoriaRisco = []
+  funcoes: funcao[] = []
   age: number;
+  executandoRequisicao:boolean=true;
+
+  filteredFuncao: Observable<funcao[]>;
 
   iniciaDados() {
     this.dados = this.formBuilder.group({
@@ -82,7 +90,8 @@ export class NewAsoComponent implements OnInit {
       nome: [null],
       crm: [null],
       inputRisco: [null],
-      telefone: [null]
+      telefone: [null],
+      image:[null]
     })
   }
 
@@ -102,12 +111,14 @@ export class NewAsoComponent implements OnInit {
   }
 
   visualizar(codConsulta) {
+    this.executandoRequisicao=true;
     this.iniciaDados();
     this.listTipoConsulta();
     this.listExames();
     this.listParecer();
     this.listRiscos();
     this.listCatRisco();
+    this.carregarFuncoes();
     this.consultaService.lerConsulta(codConsulta).subscribe(consulta => {
       if (consulta) {
         this.consulta = consulta;
@@ -117,6 +128,46 @@ export class NewAsoComponent implements OnInit {
         this.readParecerConsulta(this.consulta.codConsulta);
       }
     })
+    this.filtrarFuncao();
+    this.executandoRequisicao=false;
+  }
+
+  onAdd(event: any) {
+    if (event.target.files && event.target.files[0]) {
+        var reader = new FileReader();
+        reader.onload = (event: any) => {
+            this.dados.value.image = event.target.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+  } 
+
+  async carregarFuncoes() {
+    await this.funcaoService.listaDeFuncoes().subscribe(funcoes => {
+      for (let funcao of funcoes) {
+        this.funcoes.push(funcao);
+      }
+    });
+  }
+
+  filtrarFuncao() {
+    this.filteredFuncao = this.dados.controls['funcao'].valueChanges.pipe(
+      startWith(""),
+      map(value => (typeof value === "string" ? value : value.nome)),
+      map(nome =>
+        nome ? this._filtroFuncao(nome) : this.funcoes.slice()
+      )
+    );
+  }
+
+  private _filtroFuncao(nome: string): funcao[] {
+    const filterValue = nome.toLocaleLowerCase();
+    return this.funcoes.filter(
+      funcao => funcao.nome.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+  displayAutocompleteFuncao(funcao?: funcao): string | undefined {
+    return funcao ? funcao.nome : undefined;
   }
 
   calculateAge() {
@@ -224,7 +275,7 @@ export class NewAsoComponent implements OnInit {
     })
   }
 
-  gerarPdf() {
-    this._electronService.ipcRenderer.send("printPDF", this.content.nativeElement.innerHTML);
+  async gerarPdf() {
+    await this._electronService.ipcRenderer.send("printPDF", this.content.nativeElement.innerHTML);
   }
 }
