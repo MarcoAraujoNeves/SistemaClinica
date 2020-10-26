@@ -87,9 +87,9 @@
 				<p>
 					ASO - Atestado De Saúde Ocupacional
 				</p>
-				<h6>
+				<h5>
 					31.521.239/0001-30
-				</h6>
+				</h5>
 			</div>
 			<img *ngIf="dados.value.image" src="{{dados.value.image}}">
 		</div>
@@ -100,11 +100,11 @@
 				</div>
 			</div>
 			<div class="general-box">
-				<div class="row">
+				<div class="row1">
 					<div>Clínica Prestador: <strong>Clínica Labmed Nova Friburgo</strong></div>
 					<span>Cidade: Nova Friburgo</span>
 				</div>
-				<div class="row">
+				<div class="row2">
 					<div>Endereço: Rua Coronel João Teixeira</div>
 					<div>Bairro: Conselheiro Paulino</div>
 					<div>Tel: (22) 2580-3618</div>
@@ -119,18 +119,18 @@
 				</div>
 			</div>
 			<div class="general-box">
-				<div class="row">
+				<div class="row1">
 					<div>Razão Social: <strong> {{empresa.nome}}</strong></div>
 				</div>
-				<div class="row">
+				<div class="row2">
 					<div>CNPJ: {{empresa.cnpj}}</div>
 					<div>Risco {{dados.value.risco}}</div>
 				</div>
-				<div class="row">
+				<div class="row1">
 					<div>Endereço: {{empresa.rua}}, N°: {{empresa.numero}}</div>
 					<div>Bairro: {{empresa.bairro}}</div>
 				</div>
-				<div class="row">
+				<div class="row2">
 					<div>Cidade: {{empresa.cidade}} / {{empresa.estado}}</div>
 					<div>CEP: {{empresa.cep}}</div>
 				</div>
@@ -144,19 +144,19 @@
 				</div>
 			</div>
 			<div class="general-box">
-				<div class="row">
+				<div class="row1">
 					<div>Nome: <strong> {{paciente.nome}}</strong></div>
 				</div>
-				<div class="row">
+				<div class="row2">
 					<div>CPF: {{paciente.cpf}}</div>
 					<div>RG: {{paciente.rg}}</div>
 					<div>Nascimento / Idade: {{paciente.nascimento| date:'dd/MM/yyyy'}} - {{age}}</div>
 				</div>
-				<div class="row">
+				<div class="row2">
 					<div>Função: {{dados.value.funcao.nome}}</div>
 					<div>Setor: {{dados.value.setor}}</div>
 				</div>
-				<div class="row">
+				<div class="row2">
 					<div>Telefone: {{dados.value.telefone}}</div>
 					<div>Sexo: {{paciente.sexo==="M"?"Masculino":"Feminino"}}</div>
 				</div>
@@ -169,7 +169,7 @@
 				</div>
 			</div>
 			<div class="general-box">
-				<div class="row">
+				<div class="row2">
 					<div>Nome: {{dados.value.nome}}</div>
 					<div>CRM: {{dados.value.crm}}</div>
 				</div>
@@ -214,8 +214,11 @@
 			<div class="general-box">
 				<div class="box-exames">
 					<div class="new-data-ex">
-						<div style="display:flex;justify-content:center" *ngFor="let ex of examesConsulta">
-							<div style="width:100%;height:100%">__/__/__ {{ex.codigo}} {{ex.nome}}</div>
+						<div  *ngFor="let ex of examesConsulta">
+							<div class="row-exames">
+								<p>__/__/__ </p>
+								<p>{{ex.codigo}} {{ex.nome}}</p>
+							</div>
 						</div>
 					</div>
 				</div>

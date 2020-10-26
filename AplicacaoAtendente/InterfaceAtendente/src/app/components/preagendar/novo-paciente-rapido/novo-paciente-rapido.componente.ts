@@ -96,3 +96,7 @@ export class NovoPacienteRapidoComponent implements OnInit {
         });
     }
 }
+
+
+
+

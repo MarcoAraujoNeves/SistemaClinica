@@ -10,7 +10,7 @@
 
             <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayAutocompletePaciente">
                 <mat-option *ngFor="let paciente of filteredPacientes | async" [value]="paciente">
-                    {{paciente.nome}}
+                    {{paciente.nome}} - {{paciente.age}} anos
                 </mat-option>
             </mat-autocomplete>
 

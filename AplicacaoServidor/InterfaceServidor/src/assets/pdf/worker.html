@@ -16,7 +16,7 @@
     * {
         font-size: 0.825rem;
         padding: 0rem;
-        margin:0rem;
+        margin: 0rem;
     }
 
     .box-info>div {
@@ -61,7 +61,15 @@
         margin: 0.25rem 0rem;
     }
 
-    .row {
+    .row1 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: flex-start;
+        text-align: start;
+        margin: 0.25rem 0rem;
+    }
+
+    .row2 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         align-items: flex-start;
@@ -83,16 +91,16 @@
     .new-data-ri {
         text-align: center;
         align-items: center;
-        margin:0rem;
-        padding:0rem;
+        margin: 0rem;
+        padding: 0rem;
     }
 
     .box-risco {
-        margin:0rem;
-        padding:0rem;
         display: flex;
         text-align: center;
         align-items: center;
+        margin: 0rem;
+        padding: 0rem;
     }
 
     .box-risco-content {
@@ -120,6 +128,16 @@
     .new-data-ex {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .row-exames {
+        display: flex;
+        justify-content: center;
+        margin: 0.5rem 0rem;
+    }
+
+    .row-exames>p {
+        margin: 0rem 0.75rem;
     }
 
     /*---------------------Parecer----------------------*/

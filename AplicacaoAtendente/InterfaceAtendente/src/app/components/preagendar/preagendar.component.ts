@@ -25,10 +25,10 @@ import { NovoPacienteService } from '../../services/novo_paciente/novo-paciente.
 import { NovaEmpresaService } from '../../services/nova_empresa/nova-empresa.service'
 import { NovaFuncaoService } from '../../services/nova_funcao/nova-funcao.service'
 import { NovoSubgrupoService } from '../../services/novo_subgrupo/novo-subgrupo.service';
-import {SocketService} from '../../services/socket/socket.service';
+import { SocketService } from '../../services/socket/socket.service';
 
 
-import {RELOAD_AGENDADOS, RELOAD_PACIENTES, DONT_RELOAD_PACIENTES, RELOAD_EMPRESAS, DONT_RELOAD_EMPRESAS, BROADCAST, RELOAD_FUNCOES, DONT_RELOAD_FUNCOES, RELOAD_SUBGRUPOS, DONT_RELOAD_SUBGRUPOS} from '../constants';
+import { RELOAD_AGENDADOS, RELOAD_PACIENTES, DONT_RELOAD_PACIENTES, RELOAD_EMPRESAS, DONT_RELOAD_EMPRESAS, BROADCAST, RELOAD_FUNCOES, DONT_RELOAD_FUNCOES, RELOAD_SUBGRUPOS, DONT_RELOAD_SUBGRUPOS } from '../constants';
 import { setData } from '../date';
 
 @Component({
@@ -53,10 +53,10 @@ export class PreAgendamento {
         private estadoService: EstadosService,
         private preagendarService: PreagendarService,
         private novoPacienteService: NovoPacienteService,
-        private novaEmpresaService:NovaEmpresaService,
-        private socketService:SocketService,
-        private novaFuncaoService:NovaFuncaoService,
-        private novoSubgrupoService:NovoSubgrupoService
+        private novaEmpresaService: NovaEmpresaService,
+        private socketService: SocketService,
+        private novaFuncaoService: NovaFuncaoService,
+        private novoSubgrupoService: NovoSubgrupoService
     ) { }
 
     "use strict";
@@ -121,8 +121,7 @@ export class PreAgendamento {
             }
         })
     }
-
-    checkFuncoes(){
+    checkFuncoes() {
         this.novaFuncaoService.currentFuncoes.subscribe(message => {
             if (message == RELOAD_FUNCOES) {
                 this.carregarFuncoes();
@@ -131,7 +130,7 @@ export class PreAgendamento {
         })
     }
 
-    checkSubgrupos(){
+    checkSubgrupos() {
         this.novoSubgrupoService.currentSubgrupos.subscribe(message => {
             if (message == RELOAD_SUBGRUPOS) {
                 this.carregarSubGrupos();
@@ -187,10 +186,17 @@ export class PreAgendamento {
         this.pacientes = []
         await this.pacientesService.listaDePacientes().subscribe(pacientes => {
             for (let paciente of pacientes) {
+                this.calculateAge(paciente);
                 this.pacientes.push(paciente);
             }
         });
     }
+    calculateAge(paciente) {
+        const ageDifMs = Date.now() - new Date(paciente.nascimento).getTime();
+        const ageDate = new Date(ageDifMs); // miliseconds from epoch
+        paciente['age'] = Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+
     async carregarTipoConsulta() {
         await this.tipoConsultaService
             .listaDeTipoConsultas()
@@ -405,7 +411,7 @@ export class PreAgendamento {
     agendarConsulta(consulta) {
         this.estadoService.agendarEmConsulta(consulta).subscribe(response => {
             this.openSnackBar("Consulta agendada com sucesso!", 1);
-            this.socketService.emit('broadcast',BROADCAST);
+            this.socketService.emit('broadcast', BROADCAST);
         }, (err: HttpErrorResponse) => {
             this.openSnackBar("Não foi possível cadastrar a consulta, algum dado deve estar incorreto!", 0);
         });
@@ -429,8 +435,8 @@ export class PreAgendamento {
         await this.consultaService.cadastrarConsulta(this.firstForm.value, this.secondForm.value).subscribe(async response => {
             await this.alocarProfissionalExame(response);
             await this.agendarConsulta(response['codConsulta']);
-            this.socketService.emit('broadcast',BROADCAST);
-           // this.openSnackBar("Consulta cadastrada com sucesso!", 1)
+            this.socketService.emit('broadcast', BROADCAST);
+            // this.openSnackBar("Consulta cadastrada com sucesso!", 1)
         }, (err: HttpErrorResponse) => {
             this.openSnackBar("Não foi possível cadastrar a consulta!", 0)
         })
